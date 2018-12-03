@@ -20,16 +20,11 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Fast Blind Video Temporal Consistency')
 
-    ### model options
-    parser.add_argument('-method',          type=str,     required=True,            help='test model name')
-    parser.add_argument('-epoch',           type=int,     required=True,            help='epoch')
-
     ### dataset options
     parser.add_argument('-dataset',         type=str,     required=True,            help='dataset to test')
     parser.add_argument('-phase',           type=str,     default="test",           choices=["train", "test"])
     parser.add_argument('-data_dir',        type=str,     default='data',           help='path to data folder')
     parser.add_argument('-list_dir',        type=str,     default='lists',          help='path to list folder')
-    parser.add_argument('-checkpoint_dir',  type=str,     default='checkpoints',    help='path to checkpoint folder')
     parser.add_argument('-task',            type=str,     required=True,            help='evaluated task')
     parser.add_argument('-redo',            action="store_true",                    help='Re-generate results')
 
@@ -48,9 +43,9 @@ if __name__ == "__main__":
 
 
     ### load model opts
-    opts_filename = os.path.join(opts.checkpoint_dir, opts.method, "opts.pth")
+    opts_filename = os.path.join('pretrained_models', "ECCV18_blind_consistency_opts.pth")
     print("Load %s" %opts_filename)
-    with open(opts_filename, 'r') as f:
+    with open(opts_filename, 'rb') as f:
         model_opts = pickle.load(f)
 
 
@@ -60,7 +55,7 @@ if __name__ == "__main__":
 
 
     ### load trained model
-    model_filename = os.path.join(opts.checkpoint_dir, opts.method, "model_epoch_%d.pth" %opts.epoch)
+    model_filename = os.path.join('pretrained_models', "ECCV18_blind_consistency.pth")
     print("Load %s" %model_filename)
     state_dict = torch.load(model_filename)
     model.load_state_dict(state_dict['model'])
@@ -90,7 +85,7 @@ if __name__ == "__main__":
         ## setup path
         input_dir = os.path.join(opts.data_dir, opts.phase, "input", opts.dataset, video)
         process_dir = os.path.join(opts.data_dir, opts.phase, "processed", opts.task, opts.dataset, video)
-        output_dir = os.path.join(opts.data_dir, opts.phase, "output", opts.method, "epoch_%d" %opts.epoch, opts.task, opts.dataset, video)
+        output_dir = os.path.join(opts.data_dir, opts.phase, "ECCV18", opts.task, opts.dataset, video)
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir)
             

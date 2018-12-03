@@ -9,7 +9,8 @@ from torch.utils.data.sampler import Sampler
 from torch.utils.data import DataLoader
 
 ### custom lib
-from networks.resample2d_package.modules.resample2d import Resample2d
+#from networks.resample2d_package.modules.resample2d import Resample2d
+from resample2d_cuda import *
 
 FLO_TAG = 202021.25
 EPS = 1e-12

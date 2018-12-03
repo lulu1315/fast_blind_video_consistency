@@ -113,7 +113,10 @@ if __name__ == "__main__":
             frame_i2 = utils.img2tensor(frame_i2).to(device)
             frame_o1 = utils.img2tensor(frame_o1).to(device)
             frame_p2 = utils.img2tensor(frame_p2).to(device)
-            
+                
+            for iter in range(opts.iter):
+                
+                print("iter %d" %iter)
             ### model input
             inputs = torch.cat((frame_p2, frame_o1, frame_i2, frame_i1), dim=1)
                 
@@ -122,20 +125,14 @@ if __name__ == "__main__":
                 
             output, lstm_state = model(inputs, lstm_state)
             frame_o2 = frame_p2 + output
-                
-            for iter in range(opts.iter):
-                iter_p2=frame_o2
-                inputs = torch.cat((iter_p2, frame_o1, frame_i2, frame_i1), dim=1)
-                output, lstm_state = model(inputs, lstm_state)
-                frame_o2 = frame_p2 + output
-                #print("iter %d" %iter)
-                
+
             te = time.time()
             times.append(te - ts)
-            print("iters : %d time = %f seconds\n" %(opts.iter,te - ts))
+
             ## create new variable to detach from graph and avoid memory accumulation
             lstm_state = utils.repackage_hidden(lstm_state) 
-            
+
+
         ### convert to numpy array
         frame_o2 = utils.tensor2img(frame_o2)
             
